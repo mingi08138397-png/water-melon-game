@@ -11,14 +11,16 @@
 
   html, body {
     margin: 0;
-    min-height: 100vh;
+    height: 100%;
     overscroll-behavior: none;
   }
 
   body {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
     background: #fdf6e3;
     font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     -webkit-tap-highlight-color: transparent;
@@ -28,9 +30,42 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 24px;
+    padding: 10px 20px;
     width: 100%;
     max-width: 600px;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 400px;
+    flex: 0 0 auto;
+  }
+
+  .canvas-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
   }
 
   .header-row {
@@ -38,23 +73,29 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 400px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
+    flex: 0 0 auto;
+  }
+
+  .header-btns {
+    display: flex;
+    gap: 8px;
   }
 
   h1 {
     margin: 0;
+    font-size: 22px;
     color: #c0392b;
   }
 
   .settings-icon-btn {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border: none;
     border-radius: 50%;
     background: #fff;
     color: #c0392b;
-    font-size: 18px;
+    font-size: 16px;
     cursor: pointer;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     flex-shrink: 0;
@@ -64,14 +105,6 @@
     background: #fbeee9;
   }
 
-  .game-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-  }
-
   .side-panel {
     display: flex;
     flex-direction: row;
@@ -79,6 +112,7 @@
     gap: 10px;
     width: 400px;
     max-width: 100%;
+    flex: 0 0 auto;
   }
 
   .panel-box {
@@ -106,6 +140,12 @@
     color: #c0392b;
   }
 
+  .high-score-value {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 2px;
+  }
+
   .next-preview {
     font-size: 32px;
     line-height: 1;
@@ -130,14 +170,18 @@
 
   .canvas-wrap {
     position: relative;
-    width: 400px;
-    max-width: 100%;
+    width: auto;
+    max-width: 400px;
+    aspect-ratio: 2 / 3;
+    margin: 0 auto;
+    flex: 1 1 auto;
+    min-height: 0;
   }
 
   #game-canvas {
     display: block;
     width: 100%;
-    height: auto;
+    height: 100%;
     background: #fffdf5;
     border: 3px solid #c0392b;
     border-radius: 8px;
@@ -169,6 +213,22 @@
   .game-over-box h2 {
     margin-top: 0;
     color: #c0392b;
+  }
+
+  .game-over-highscore {
+    color: #888;
+    font-size: 13px;
+    margin: -8px 0 8px;
+  }
+
+  .new-record-badge {
+    color: #e67e22;
+    font-weight: bold;
+    margin: -4px 0 12px;
+  }
+
+  .new-record-badge.hidden {
+    display: none;
   }
 
   .settings-overlay {
@@ -269,6 +329,7 @@
     max-width: 100%;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     position: relative;
+    flex: 0 0 auto;
   }
 
   .mission-header {
@@ -355,6 +416,50 @@
     transform: translate(-50%, -130%);
   }
 
+  .combo-badge {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%) scale(0.85);
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: #fff;
+    font-weight: bold;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: none;
+    z-index: 5;
+    white-space: nowrap;
+  }
+
+  .combo-badge.hidden {
+    display: none;
+  }
+
+  .combo-badge.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .combo-badge.pop {
+    animation: comboPop 0.28s ease;
+  }
+
+  @keyframes comboPop {
+    0% { transform: translateX(-50%) scale(1.35); }
+    100% { transform: translateX(-50%) scale(1); }
+  }
+
+  .fruit-picker-cap-note {
+    font-size: 12px;
+    color: #c0392b;
+    font-weight: bold;
+    margin: 6px 0 0;
+  }
+
   .fruit-picker-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -378,6 +483,18 @@
 
   .fruit-picker-btn:hover {
     background: #fbeee9;
+  }
+
+  .fruit-picker-btn:disabled,
+  .fruit-picker-btn.locked {
+    opacity: 0.35;
+    filter: grayscale(0.7);
+    cursor: not-allowed;
+    border-color: #ccc;
+  }
+
+  .fruit-picker-btn:disabled:hover {
+    background: #fdf6e3;
   }
 
   .fruit-picker-emoji {
@@ -426,53 +543,88 @@
       font-size: 13px;
     }
   }
+
+  /* 화면이 넓어도 좌우로 벌리지 않고, 세로로 쌓인 요소들의 폭/캔버스만 살짝 키운다. */
+  @media (min-width: 700px) {
+    .sidebar {
+      max-width: 460px;
+    }
+
+    .side-panel {
+      width: 460px;
+    }
+
+    .mission-panel {
+      width: 460px;
+    }
+
+    .canvas-wrap {
+      max-width: 460px;
+    }
+  }
 </style>
 </head>
 <body>
   <div class="app">
+    <div class="layout">
+    <div class="sidebar">
     <div class="header-row">
       <h1>수박게임</h1>
-      <button id="settings-btn" class="settings-icon-btn" title="키 설정" aria-label="키 설정">⚙</button>
+      <div class="header-btns">
+        <button id="pause-btn" class="settings-icon-btn" title="일시정지" aria-label="일시정지">⏸</button>
+        <button id="settings-btn" class="settings-icon-btn" title="키 설정" aria-label="키 설정">⚙</button>
+      </div>
     </div>
 
-    <div class="game-wrap">
-      <div class="side-panel">
-        <div class="panel-box">
-          <span class="panel-label">점수</span>
-          <span id="score" class="score-value">0</span>
-        </div>
-        <div class="panel-box">
-          <span class="panel-label">다음 과일</span>
-          <div id="next-preview" class="next-preview"></div>
-        </div>
-        <button id="restart-btn" class="restart-btn">재시작</button>
+    <div class="side-panel">
+      <div class="panel-box">
+        <span class="panel-label">점수</span>
+        <span id="score" class="score-value">0</span>
+        <span id="high-score" class="high-score-value">최고 0</span>
       </div>
-
-      <div class="mission-panel">
-        <div id="mission-notice" class="mission-notice"></div>
-        <div class="mission-header">
-          <span class="mission-title">🎯 미션</span>
-          <button id="mission-reroll-btn" class="mission-reroll-btn">🔄 리롤 (3)</button>
-        </div>
-        <div class="mission-body">
-          <span id="mission-text" class="mission-text">미션 준비 중...</span>
-          <span id="mission-progress" class="mission-progress">0/0</span>
-        </div>
-        <div class="mission-footer">
-          <span id="mission-reward" class="mission-reward">보상: -</span>
-        </div>
+      <div class="panel-box">
+        <span class="panel-label">다음 과일</span>
+        <div id="next-preview" class="next-preview"></div>
       </div>
+    </div>
 
+    <div class="mission-panel">
+      <div id="mission-notice" class="mission-notice"></div>
+      <div class="mission-header">
+        <span class="mission-title">🎯 미션</span>
+        <button id="mission-reroll-btn" class="mission-reroll-btn">🔄 리롤 (3)</button>
+      </div>
+      <div class="mission-body">
+        <span id="mission-text" class="mission-text">미션 준비 중...</span>
+        <span id="mission-progress" class="mission-progress">0/0</span>
+      </div>
+      <div class="mission-footer">
+        <span id="mission-reward" class="mission-reward">보상: -</span>
+      </div>
+    </div>
+    </div>
+
+    <div class="canvas-col">
       <div class="canvas-wrap">
         <canvas id="game-canvas" width="400" height="600"></canvas>
+        <div id="combo-badge" class="combo-badge hidden">🔥 <span id="combo-count-text">2</span> COMBO!</div>
+        <div id="pause-overlay" class="game-over hidden">
+          <div class="game-over-box">
+            <h2>일시정지</h2>
+            <button id="resume-btn" class="restart-btn">계속하기</button>
+          </div>
+        </div>
         <div id="game-over" class="game-over hidden">
           <div class="game-over-box">
             <h2>게임 오버</h2>
             <p>최종 점수: <span id="final-score">0</span></p>
+            <p class="game-over-highscore">최고 점수: <span id="final-high-score">0</span></p>
+            <p id="new-record-badge" class="new-record-badge hidden">🎉 신기록 달성!</p>
             <button id="game-over-restart-btn" class="restart-btn">다시 시작</button>
           </div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
@@ -493,6 +645,10 @@
         <span>과일 드롭</span>
         <button class="key-btn" id="key-drop" data-action="drop">Space</button>
       </div>
+      <div class="key-row">
+        <span>재시작</span>
+        <button class="key-btn" id="key-restart" data-action="restart">R</button>
+      </div>
 
       <div class="settings-actions">
         <button id="settings-reset" class="reset-btn">기본값으로</button>
@@ -505,6 +661,7 @@
     <div class="settings-box">
       <h2 id="fruit-picker-title">과일을 선택하세요</h2>
       <p class="settings-hint">미션 보상으로 원하는 과일을 골라보세요.</p>
+      <p id="fruit-picker-cap-note" class="fruit-picker-cap-note"></p>
       <div id="fruit-picker-grid" class="fruit-picker-grid"></div>
     </div>
   </div>
@@ -560,17 +717,34 @@
     const DANGER_TIME_LIMIT = 1.2; // 초 단위, 이 시간 이상 라인 위에 머물면 게임오버
     const DROP_COOLDOWN = 0.35; // 초
 
+    // ---- 콤보 설정 ----
+    // 병합이 일어난 뒤 이 시간 안에 다음 병합이 또 일어나면 콤보가 이어진다.
+    const COMBO_WINDOW = 1.5; // 초
+    const COMBO_MULTIPLIER_STEP = 0.15; // 콤보 1당 점수 배율 증가폭
+    const COMBO_MULTIPLIER_CAP = 3.0; // 최대 점수 배율
+
+    // ---- 특수 과일 설정 ----
+    // 플레이어가 직접 떨어뜨리는 과일에만 낮은 확률로 등장한다(합쳐서 생기는 과일은 항상 일반 과일).
+    const GOLDEN_CHANCE = 0.1;  // 10%: ✨ 골든 과일 - 합쳐질 때 점수 보너스
+    const BOMB_CHANCE = 0.05;   // 5%: 💣 폭탄 과일 - 닿은 과일들을 함께 제거
+    const BOMB_BLAST_MULT = 2.2; // 폭탄 반경 = 폭탄 과일 반지름 * 이 값
+
     const canvas = document.getElementById("game-canvas");
     const ctx = canvas.getContext("2d");
     const W = canvas.width;
     const H = canvas.height;
 
     const scoreEl = document.getElementById("score");
+    const highScoreEl = document.getElementById("high-score");
     const nextPreviewEl = document.getElementById("next-preview");
     const gameOverEl = document.getElementById("game-over");
     const finalScoreEl = document.getElementById("final-score");
-    const restartBtn = document.getElementById("restart-btn");
+    const finalHighScoreEl = document.getElementById("final-high-score");
+    const newRecordBadgeEl = document.getElementById("new-record-badge");
     const gameOverRestartBtn = document.getElementById("game-over-restart-btn");
+    const pauseBtn = document.getElementById("pause-btn");
+    const pauseOverlayEl = document.getElementById("pause-overlay");
+    const resumeBtn = document.getElementById("resume-btn");
 
     const missionTextEl = document.getElementById("mission-text");
     const missionProgressEl = document.getElementById("mission-progress");
@@ -580,12 +754,24 @@
     const fruitPickerOverlay = document.getElementById("fruit-picker-overlay");
     const fruitPickerTitle = document.getElementById("fruit-picker-title");
     const fruitPickerGrid = document.getElementById("fruit-picker-grid");
+    const fruitPickerCapNoteEl = document.getElementById("fruit-picker-cap-note");
+
+    const comboBadgeEl = document.getElementById("combo-badge");
+    const comboCountTextEl = document.getElementById("combo-count-text");
+
+    const HIGH_SCORE_KEY = "watermelon-high-score";
 
     let fruits = [];
     let score = 0;
+    let highScore = loadHighScore();
     let isGameOver = false;
+    let isPaused = false;
+    let settingsOpen = false;
     let dropCooldownTimer = 0;
     let idCounter = 0;
+
+    // 보상으로 생성/선택할 수 있는 과일 범위를 제한하기 위해, 지금까지 만들어본 가장 높은 티어를 추적한다.
+    let maxTierReached = MAX_DROP_TIER - 1;
 
     let currentMission = null;
     let missionRerollsLeft = MISSION_REROLL_MAX;
@@ -593,16 +779,32 @@
     let fruitPickerOpen = false;
     let pickerPurpose = null; // "spawn" | "next"
     let pickerFinishedTier = null;
+    const fruitPickerButtons = [];
+
+    // ---- 콤보 / 특수 과일 상태 ----
+    let comboCount = 0;
+    let comboTimer = 0;
+    let effects = []; // 폭발 링, 점수 팝업 등 순수 시각 효과
 
     let currentFruitTier = randomDropTier();
     let nextFruitTier = randomDropTier();
+    let currentFruitSpecial = rollSpecial(); // null | "golden" | "bomb"
+    let nextFruitSpecial = rollSpecial();
     let pointerX = W / 2;
 
     function randomDropTier() {
       return Math.floor(Math.random() * MAX_DROP_TIER);
     }
 
-    function createFruit(tier, x, y) {
+    // 플레이어가 떨어뜨리는 과일에만 낮은 확률로 특수 속성을 부여한다.
+    function rollSpecial() {
+      const roll = Math.random();
+      if (roll < BOMB_CHANCE) return "bomb";
+      if (roll < BOMB_CHANCE + GOLDEN_CHANCE) return "golden";
+      return null;
+    }
+
+    function createFruit(tier, x, y, special = null) {
       const def = FRUITS[tier];
       return {
         id: idCounter++,
@@ -616,20 +818,38 @@
         radius: def.radius,
         dangerTime: 0,
         settled: false,
+        special, // null | "golden" | "bomb"
       };
     }
 
     function resetGame() {
+      // 게임오버가 나기 전에(R키 등으로) 직접 재시작하더라도, 그 판에서 낸 점수가
+      // 최고 점수보다 높으면 사라지기 전에 저장해준다.
+      if (!isGameOver) {
+        saveHighScoreIfNeeded();
+        updateHighScoreUI();
+      }
+
       fruits = [];
       score = 0;
       isGameOver = false;
       dropCooldownTimer = 0;
       currentFruitTier = randomDropTier();
       nextFruitTier = randomDropTier();
+      currentFruitSpecial = rollSpecial();
+      nextFruitSpecial = rollSpecial();
+      maxTierReached = MAX_DROP_TIER - 1;
       gameOverEl.classList.add("hidden");
+      newRecordBadgeEl.classList.add("hidden");
       updateScoreUI();
       updateNextPreviewUI();
 
+      comboCount = 0;
+      comboTimer = 0;
+      effects = [];
+      hideComboBadge(true);
+
+      setPaused(false);
       missionRerollsLeft = MISSION_REROLL_MAX;
       closeFruitPicker();
       generateMission();
@@ -639,9 +859,86 @@
       scoreEl.textContent = score;
     }
 
-    function updateNextPreviewUI() {
-      nextPreviewEl.textContent = FRUITS[nextFruitTier].emoji;
+    function loadHighScore() {
+      try {
+        const v = parseInt(localStorage.getItem(HIGH_SCORE_KEY), 10);
+        return Number.isFinite(v) ? v : 0;
+      } catch (e) {
+        return 0;
+      }
     }
+
+    function updateHighScoreUI() {
+      highScoreEl.textContent = `최고 ${highScore}`;
+    }
+
+    // 게임오버 시 호출. 신기록이면 저장하고 true를 반환한다.
+    function saveHighScoreIfNeeded() {
+      if (score > highScore) {
+        highScore = score;
+        try {
+          localStorage.setItem(HIGH_SCORE_KEY, String(highScore));
+        } catch (e) {
+          // 저장 실패해도 게임 진행에는 지장 없음
+        }
+        return true;
+      }
+      return false;
+    }
+
+    function updateNextPreviewUI() {
+      const prefix = nextFruitSpecial === "golden" ? "✨" : nextFruitSpecial === "bomb" ? "💣" : "";
+      nextPreviewEl.textContent = prefix + FRUITS[nextFruitTier].emoji;
+    }
+
+    // ---- 콤보 배지 ----
+
+    function showComboBadge() {
+      comboBadgeEl.classList.remove("hidden");
+      comboCountTextEl.textContent = comboCount;
+      // 애니메이션을 다시 트리거하기 위해 클래스를 껐다가 강제로 리플로우 후 켠다.
+      comboBadgeEl.classList.remove("pop");
+      void comboBadgeEl.offsetWidth;
+      comboBadgeEl.classList.add("show", "pop");
+    }
+
+    function hideComboBadge(immediate) {
+      comboBadgeEl.classList.remove("show", "pop");
+      if (immediate) {
+        comboBadgeEl.classList.add("hidden");
+      } else {
+        setTimeout(() => {
+          if (!comboBadgeEl.classList.contains("show")) {
+            comboBadgeEl.classList.add("hidden");
+          }
+        }, 220);
+      }
+    }
+
+    // ---- 일시정지 ----
+
+    // 사용자가 직접 누른 일시정지뿐 아니라, 설정창/보상 팝업이 열려있을 때도
+    // 물리 연산이 뒤에서 계속 돌아가 몰래 게임오버가 되지 않도록 함께 멈춘다.
+    function isEffectivelyPaused() {
+      return isPaused || settingsOpen || fruitPickerOpen;
+    }
+
+    function setPaused(value) {
+      isPaused = value;
+      pauseOverlayEl.classList.toggle("hidden", !isPaused);
+      pauseBtn.textContent = isPaused ? "▶" : "⏸";
+      pauseBtn.setAttribute("aria-label", isPaused ? "재개" : "일시정지");
+      pauseBtn.title = isPaused ? "재개" : "일시정지";
+    }
+
+    pauseBtn.addEventListener("click", () => {
+      if (isGameOver) return;
+      setPaused(!isPaused);
+    });
+
+    resumeBtn.addEventListener("click", () => setPaused(false));
+
+    updateHighScoreUI();
 
     // ---- 미션 로직 ----
 
@@ -715,6 +1012,7 @@
 
     function buildFruitPickerGrid() {
       fruitPickerGrid.innerHTML = "";
+      fruitPickerButtons.length = 0;
       FRUITS.forEach((def, tier) => {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -722,7 +1020,21 @@
         btn.innerHTML = `<span class="fruit-picker-emoji">${def.emoji}</span><span>${def.name}</span>`;
         btn.addEventListener("click", () => selectPickedFruit(tier));
         fruitPickerGrid.appendChild(btn);
+        fruitPickerButtons.push(btn);
       });
+    }
+
+    // 미션 보상으로 원하는 과일을 아무거나 고를 수 있게 하면 처음부터 수박을 골라
+    // 게임을 사실상 즉시 깨버릴 수 있으므로, 지금까지 실제로 만들어본 과일 티어 +1까지만 고르게 한다.
+    function refreshFruitPickerAvailability() {
+      const cap = Math.min(maxTierReached + 1, FRUITS.length - 1);
+      fruitPickerButtons.forEach((btn, tier) => {
+        const locked = tier > cap;
+        btn.disabled = locked;
+        btn.classList.toggle("locked", locked);
+      });
+      const capDef = FRUITS[cap];
+      fruitPickerCapNoteEl.textContent = `지금은 ${capDef.emoji} ${capDef.name}까지 고를 수 있어요 (더 큰 과일을 만들면 선택 범위가 늘어나요)`;
     }
 
     function openFruitPicker(purpose, finishedTier) {
@@ -731,6 +1043,7 @@
       fruitPickerOpen = true;
       fruitPickerTitle.textContent =
         purpose === "spawn" ? "생성할 과일을 선택하세요" : "다음 과일로 선택하세요";
+      refreshFruitPickerAvailability();
       fruitPickerOverlay.classList.remove("hidden");
     }
 
@@ -803,26 +1116,27 @@
     }, { passive: false });
 
     function dropCurrentFruit(x) {
-      if (isGameOver || dropCooldownTimer > 0 || fruitPickerOpen) return;
+      if (isGameOver || dropCooldownTimer > 0 || isEffectivelyPaused()) return;
 
       const radius = FRUITS[currentFruitTier].radius;
       const clampedX = Math.max(radius, Math.min(W - radius, x));
 
-      fruits.push(createFruit(currentFruitTier, clampedX, LINE_Y - radius - 10));
+      fruits.push(createFruit(currentFruitTier, clampedX, LINE_Y - radius - 10, currentFruitSpecial));
 
       currentFruitTier = nextFruitTier;
+      currentFruitSpecial = nextFruitSpecial;
       nextFruitTier = randomDropTier();
+      nextFruitSpecial = rollSpecial();
       updateNextPreviewUI();
       dropCooldownTimer = DROP_COOLDOWN;
     }
 
-    restartBtn.addEventListener("click", resetGame);
     gameOverRestartBtn.addEventListener("click", resetGame);
 
     // ---- PC 키보드 조작 & 키 설정 ----
 
     const KEY_BINDINGS_STORAGE_KEY = "watermelon-key-bindings";
-    const DEFAULT_KEY_BINDINGS = { left: "ArrowLeft", right: "ArrowRight", drop: "Space" };
+    const DEFAULT_KEY_BINDINGS = { left: "ArrowLeft", right: "ArrowRight", drop: "Space", restart: "KeyR" };
     const KEY_MOVE_SPEED = 520; // px/s, 키보드로 이동할 때 좌우 속도
 
     let keyBindings = loadKeyBindings();
@@ -832,7 +1146,7 @@
     function loadKeyBindings() {
       try {
         const saved = JSON.parse(localStorage.getItem(KEY_BINDINGS_STORAGE_KEY));
-        if (saved && saved.left && saved.right && saved.drop) {
+        if (saved && saved.left && saved.right && saved.drop && saved.restart) {
           return saved;
         }
       } catch (e) {
@@ -867,6 +1181,7 @@
       left: document.getElementById("key-left"),
       right: document.getElementById("key-right"),
       drop: document.getElementById("key-drop"),
+      restart: document.getElementById("key-restart"),
     };
 
     function updateKeyButtonLabels() {
@@ -894,6 +1209,7 @@
 
     settingsBtn.addEventListener("click", () => {
       settingsOverlay.classList.remove("hidden");
+      settingsOpen = true;
     });
 
     settingsClose.addEventListener("click", closeSettings);
@@ -909,6 +1225,7 @@
       }
       updateKeyButtonLabels();
       settingsOverlay.classList.add("hidden");
+      settingsOpen = false;
     }
 
     settingsReset.addEventListener("click", () => {
@@ -936,7 +1253,8 @@
       const isGameKey =
         e.code === keyBindings.left ||
         e.code === keyBindings.right ||
-        e.code === keyBindings.drop;
+        e.code === keyBindings.drop ||
+        e.code === keyBindings.restart;
 
       if (isGameKey) {
         e.preventDefault(); // 스페이스바/방향키의 기본 스크롤 동작 방지
@@ -947,6 +1265,10 @@
       if (e.code === keyBindings.drop && !e.repeat) {
         dropCurrentFruit(pointerX);
       }
+
+      if (e.code === keyBindings.restart && !e.repeat) {
+        resetGame();
+      }
     });
 
     document.addEventListener("keyup", (e) => {
@@ -955,7 +1277,7 @@
 
     // 매 프레임 눌려있는 이동 키에 따라 포인터 위치(= 다음 과일의 x좌표)를 이동시킨다.
     function applyKeyboardMovement(dt) {
-      if (isGameOver) return;
+      if (isGameOver || isEffectivelyPaused()) return;
       if (pressedKeys.has(keyBindings.left)) pointerX -= KEY_MOVE_SPEED * dt;
       if (pressedKeys.has(keyBindings.right)) pointerX += KEY_MOVE_SPEED * dt;
       pointerX = Math.max(0, Math.min(W, pointerX));
@@ -995,6 +1317,7 @@
         }
       }
 
+      handleBombs();
       handleMerges();
 
       // 여러 과일이 동시에 맞닿아 쌓인 상태는 한 번의 보정 패스로는 수렴하지 않으므로
@@ -1017,10 +1340,12 @@
       for (let i = 0; i < fruits.length; i++) {
         const a = fruits[i];
         if (merged.has(a.id)) continue;
+        if (a.special === "bomb") continue; // 폭탄은 병합하지 않고 handleBombs()에서 따로 처리
 
         for (let j = i + 1; j < fruits.length; j++) {
           const b = fruits[j];
           if (merged.has(b.id)) continue;
+          if (b.special === "bomb") continue;
           if (a.tier !== b.tier || a.tier >= FRUITS.length - 1) continue;
 
           const dx = b.x - a.x;
@@ -1040,14 +1365,78 @@
           toRemove.add(b.id);
           toAdd.push(createFruit(nextTier, nx, ny));
 
-          score += FRUITS[nextTier].score;
+          // ---- 콤보: 짧은 시간 안에 연속으로 병합될수록 점수 배율이 올라간다 ----
+          comboCount++;
+          comboTimer = COMBO_WINDOW;
+          const comboMultiplier = Math.min(
+            1 + (comboCount - 1) * COMBO_MULTIPLIER_STEP,
+            COMBO_MULTIPLIER_CAP
+          );
+          if (comboCount >= 2) showComboBadge();
+
+          // ---- 골든 과일: 병합에 참여했다면 점수 배율이 추가로 붙는다 ----
+          const goldenMultiplier =
+            1 + (a.special === "golden" ? 1 : 0) + (b.special === "golden" ? 1 : 0);
+
+          const gained = Math.round(FRUITS[nextTier].score * comboMultiplier * goldenMultiplier);
+          score += gained;
+
+          const popupColor = goldenMultiplier > 1 ? "#e6a700" : "#c0392b";
+          spawnScoreText(nx, ny, `+${gained}`, popupColor);
+
           trackMissionProgress(nextTier);
+          if (nextTier > maxTierReached) maxTierReached = nextTier;
         }
       }
 
       if (toRemove.size > 0) {
         fruits = fruits.filter((f) => !toRemove.has(f.id));
         fruits.push(...toAdd);
+        updateScoreUI();
+      }
+    }
+
+    // 폭탄 과일이 다른 과일과 실제로 맞닿으면, 주변 일정 반경의 과일들을 함께 제거하며 터진다.
+    // (병합과 달리 새 과일을 만들지 않고, 쌓인 과일을 정리하는 용도)
+    function handleBombs() {
+      const toRemove = new Set();
+      const explosionOrigins = [];
+      let exploded = false;
+
+      for (const a of fruits) {
+        if (a.special !== "bomb" || toRemove.has(a.id)) continue;
+
+        let triggered = false;
+        for (const b of fruits) {
+          if (b.id === a.id || b.special === "bomb") continue;
+          const dist = Math.hypot(b.x - a.x, b.y - a.y);
+          if (dist < a.radius + b.radius) {
+            triggered = true;
+            break;
+          }
+        }
+        if (!triggered) continue;
+
+        const blastRadius = a.radius * BOMB_BLAST_MULT;
+        for (const b of fruits) {
+          if (b.id === a.id) continue;
+          const dist = Math.hypot(b.x - a.x, b.y - a.y);
+          if (dist < blastRadius + b.radius * 0.3) {
+            toRemove.add(b.id);
+          }
+        }
+        toRemove.add(a.id);
+        exploded = true;
+        explosionOrigins.push({ x: a.x, y: a.y });
+        spawnExplosionEffect(a.x, a.y, blastRadius);
+      }
+
+      if (exploded) {
+        const bonus = toRemove.size * 5; // 함께 제거된 과일 수에 비례한 소소한 보너스 점수
+        score += bonus;
+        const origin = explosionOrigins[0];
+        spawnScoreText(origin.x, origin.y, `+${bonus}`, "#e74c3c");
+        fruits = fruits.filter((f) => !toRemove.has(f.id));
         updateScoreUI();
       }
     }
@@ -1128,7 +1517,11 @@
 
     function triggerGameOver() {
       isGameOver = true;
+      const isNewRecord = saveHighScoreIfNeeded();
       finalScoreEl.textContent = score;
+      finalHighScoreEl.textContent = highScore;
+      newRecordBadgeEl.classList.toggle("hidden", !isNewRecord);
+      updateHighScoreUI();
       gameOverEl.classList.remove("hidden");
     }
 
@@ -1509,6 +1902,47 @@
       shapeWatermelon,
     ];
 
+    // 골든/폭탄 과일에 표시하는 장식(반짝이는 금색 테두리, 점선 폭탄 테두리 + 아이콘)
+    function drawSpecialOverlay(ctx, x, y, r, special) {
+      if (!special) return;
+
+      if (special === "golden") {
+        ctx.save();
+        ctx.strokeStyle = "#ffd700";
+        ctx.lineWidth = Math.max(2, r * 0.12);
+        ctx.shadowColor = "#ffd700";
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(x, y, r * 1.06, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.save();
+        ctx.font = `${Math.max(12, r * 0.55)}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("✨", x + r * 0.62, y - r * 0.62);
+        ctx.restore();
+      } else if (special === "bomb") {
+        ctx.save();
+        ctx.strokeStyle = "#e74c3c";
+        ctx.lineWidth = Math.max(2, r * 0.1);
+        ctx.setLineDash([r * 0.25, r * 0.15]);
+        ctx.beginPath();
+        ctx.arc(x, y, r * 1.06, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.restore();
+
+        ctx.save();
+        ctx.font = `${Math.max(14, r * 0.6)}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("💣", x, y);
+        ctx.restore();
+      }
+    }
+
     function drawFruitByTier(tier, x, y, r, color) {
       const drawer = FRUIT_SHAPE_DRAWERS[tier];
       if (drawer) {
@@ -1523,6 +1957,7 @@
     function drawFruit(f) {
       const def = FRUITS[f.tier];
       drawFruitByTier(f.tier, f.x, f.y, f.radius, def.color);
+      drawSpecialOverlay(ctx, f.x, f.y, f.radius, f.special);
     }
 
     function drawCurrentFruit() {
@@ -1534,6 +1969,7 @@
 
       ctx.globalAlpha = 0.85;
       drawFruitByTier(currentFruitTier, x, y, radius, def.color);
+      drawSpecialOverlay(ctx, x, y, radius, currentFruitSpecial);
       ctx.globalAlpha = 1;
     }
 
@@ -1548,11 +1984,54 @@
       ctx.setLineDash([]);
     }
 
+    // ---- 시각 효과: 폭발 링 / 점수 팝업 텍스트 ----
+
+    function spawnExplosionEffect(x, y, maxRadius) {
+      effects.push({ type: "explosion", x, y, t: 0, duration: 0.4, maxRadius });
+    }
+
+    function spawnScoreText(x, y, text, color) {
+      effects.push({ type: "text", x, y, t: 0, duration: 0.8, text, color });
+    }
+
+    function updateEffects(dt) {
+      if (effects.length === 0) return;
+      effects = effects.filter((e) => {
+        e.t += dt;
+        return e.t < e.duration;
+      });
+    }
+
+    function drawEffects() {
+      for (const e of effects) {
+        const p = Math.min(e.t / e.duration, 1);
+        if (e.type === "explosion") {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, 1 - p);
+          ctx.strokeStyle = "#ff9f43";
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(e.x, e.y, e.maxRadius * p, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        } else if (e.type === "text") {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, 1 - p);
+          ctx.fillStyle = e.color || "#c0392b";
+          ctx.font = "bold 16px sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(e.text, e.x, e.y - p * 30);
+          ctx.restore();
+        }
+      }
+    }
+
     function render() {
       ctx.clearRect(0, 0, W, H);
       drawLine();
       for (const f of fruits) drawFruit(f);
       drawCurrentFruit();
+      drawEffects();
     }
 
     // ---- 메인 루프 ----
@@ -1566,11 +2045,26 @@
       lastTime = timestamp;
       frameDt = Math.min(frameDt, 0.05); // 탭 전환 등으로 인한 큰 점프 방지
 
-      if (dropCooldownTimer > 0) dropCooldownTimer -= frameDt;
+      const paused = isEffectivelyPaused();
+
+      if (!paused && dropCooldownTimer > 0) dropCooldownTimer -= frameDt;
+
+      if (!paused && comboTimer > 0) {
+        comboTimer -= frameDt;
+        if (comboTimer <= 0) {
+          comboTimer = 0;
+          if (comboCount > 0) {
+            comboCount = 0;
+            hideComboBadge();
+          }
+        }
+      }
+
+      if (!paused) updateEffects(frameDt);
 
       applyKeyboardMovement(frameDt);
 
-      if (!isGameOver) {
+      if (!isGameOver && !paused) {
         let remaining = frameDt;
         while (remaining > 0) {
           const dt = Math.min(FIXED_DT, remaining);
